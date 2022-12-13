@@ -53,7 +53,7 @@ namespace ControleDeEstoque.Controllers
 
                 var catprodMD = new CategoriaProdutoViewModel
                 {
-                    ListaDeCategorias = new SelectList(await categoriaQuery.Distinct().ToArrayAsync()),
+                    ListaDeCategorias = new SelectList(await categoriaQuery.Distinct().ToListAsync()),
                     ListaDeProdutos = await prod.ToListAsync()
 
                 };

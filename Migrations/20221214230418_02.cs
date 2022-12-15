@@ -4,7 +4,7 @@
 
 namespace ControleDeEstoque.Migrations
 {
-    public partial class _01 : Migration
+    public partial class _02 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

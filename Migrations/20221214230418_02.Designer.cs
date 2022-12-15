@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControleDeEstoque.Migrations
 {
     [DbContext(typeof(ControleDeEstoqueContext))]
-    [Migration("20221213121459_listacategorias")]
-    partial class listacategorias
+    [Migration("20221214230418_02")]
+    partial class _02
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,7 @@ namespace ControleDeEstoque.Migrations
                     b.Property<string>("CategoriaClasseCategoria")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProdutosId")
+                    b.Property<int?>("ProdutosId")
                         .HasColumnType("int");
 
                     b.Property<string>("SearchString")
@@ -76,6 +76,9 @@ namespace ControleDeEstoque.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PesquisaClientesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Rua")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -85,6 +88,8 @@ namespace ControleDeEstoque.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PesquisaClientesId");
 
                     b.ToTable("Clientes");
                 });
@@ -105,6 +110,30 @@ namespace ControleDeEstoque.Migrations
                     b.ToTable("Fornecedores");
                 });
 
+            modelBuilder.Entity("ControleDeEstoque.Models.PesquisaClientes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("ClientesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PesquisaSelecionada")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SearchString")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientesId");
+
+                    b.ToTable("Pesquisas");
+                });
+
             modelBuilder.Entity("ControleDeEstoque.Models.Produto", b =>
                 {
                     b.Property<int>("Id")
@@ -117,9 +146,6 @@ namespace ControleDeEstoque.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CategoriaProdutoViewModelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EnumFornecedores")
                         .HasColumnType("int");
 
                     b.Property<int?>("FornecedorId")
@@ -165,11 +191,25 @@ namespace ControleDeEstoque.Migrations
                 {
                     b.HasOne("ControleDeEstoque.Models.Produto", "Produtos")
                         .WithMany()
-                        .HasForeignKey("ProdutosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProdutosId");
 
                     b.Navigation("Produtos");
+                });
+
+            modelBuilder.Entity("ControleDeEstoque.Models.Cliente", b =>
+                {
+                    b.HasOne("ControleDeEstoque.Models.PesquisaClientes", null)
+                        .WithMany("SelectClasseClientes")
+                        .HasForeignKey("PesquisaClientesId");
+                });
+
+            modelBuilder.Entity("ControleDeEstoque.Models.PesquisaClientes", b =>
+                {
+                    b.HasOne("ControleDeEstoque.Models.Cliente", "Clientes")
+                        .WithMany()
+                        .HasForeignKey("ClientesId");
+
+                    b.Navigation("Clientes");
                 });
 
             modelBuilder.Entity("ControleDeEstoque.Models.Produto", b =>
@@ -178,11 +218,9 @@ namespace ControleDeEstoque.Migrations
                         .WithMany("ListaDeProdutos")
                         .HasForeignKey("CategoriaProdutoViewModelId");
 
-                    b.HasOne("ControleDeEstoque.Models.Fornecedor", "Fornecedor")
+                    b.HasOne("ControleDeEstoque.Models.Fornecedor", null)
                         .WithMany("Produtos")
                         .HasForeignKey("FornecedorId");
-
-                    b.Navigation("Fornecedor");
                 });
 
             modelBuilder.Entity("ControleDeEstoque.Models.CategoriaProdutoViewModel", b =>
@@ -193,6 +231,11 @@ namespace ControleDeEstoque.Migrations
             modelBuilder.Entity("ControleDeEstoque.Models.Fornecedor", b =>
                 {
                     b.Navigation("Produtos");
+                });
+
+            modelBuilder.Entity("ControleDeEstoque.Models.PesquisaClientes", b =>
+                {
+                    b.Navigation("SelectClasseClientes");
                 });
 #pragma warning restore 612, 618
         }

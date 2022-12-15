@@ -21,19 +21,48 @@ namespace ControleDeEstoque.Controllers
  
         //pesquisa 
 
-        public async Task<IActionResult> Index(string searchString)
-        {
-            var cl = from p
-                       in _context.Clientes
-                    select p;
+        public async Task<IActionResult> Index(string searchString, string PesquisaSelecionada)
 
-            if (!String.IsNullOrEmpty(searchString))
+        {
+
+            var names = new List<string>{ "Nome", "Cidade" }; 
+
+       
+           var queryNomes = from x in _context.Clientes
+                            orderby x.Nome
+                         select x.Nome;
+
+            var queryCidades = from x in _context.Clientes
+                               orderby x.Cidade
+                               select x.Cidade;
+
+            var queryClientes = from x in _context.Clientes
+                                select x; 
+
+            if(!String.IsNullOrEmpty(searchString))
             {
-                cl = cl.Where(a => a.Nome.Contains(searchString))
-                           .OrderBy(b => b.Nome);
+                queryClientes = from x in _context.Clientes
+                             where x.Nome.Contains(searchString)
+                             orderby x.Nome
+                             select x;
+
+            }
+            if(!String.IsNullOrEmpty(PesquisaSelecionada))
+            {
+                queryClientes = from x in _context.Clientes
+                                where x.Nome == PesquisaSelecionada
+                                select x; 
             }
 
-            return View(await cl.ToListAsync());
+            var nomeClientes = new PesquisaClientes
+            {
+                SelectNomeClientes = new SelectList(await queryNomes.Distinct().ToListAsync()),
+                SelectClasseClientes = await queryClientes.ToListAsync()
+            };
+
+            return View(nomeClientes);     
+
+ 
         }
 
 

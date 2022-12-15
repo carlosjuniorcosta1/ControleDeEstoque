@@ -4,29 +4,10 @@
 
 namespace ControleDeEstoque.Migrations
 {
-    public partial class listacategorias : Migration
+    public partial class _01 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Clientes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Rua = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Bairro = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UF = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clientes", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Fornecedores",
                 columns: table => new
@@ -62,7 +43,7 @@ namespace ControleDeEstoque.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CategoriaClasseCategoria = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SearchString = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProdutosId = table.Column<int>(type: "int", nullable: false)
+                    ProdutosId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,9 +59,8 @@ namespace ControleDeEstoque.Migrations
                     NomeDoProduto = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Categoria = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Preco = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    EnumFornecedores = table.Column<int>(type: "int", nullable: false),
-                    FornecedorId = table.Column<int>(type: "int", nullable: true),
-                    CategoriaProdutoViewModelId = table.Column<int>(type: "int", nullable: true)
+                    CategoriaProdutoViewModelId = table.Column<int>(type: "int", nullable: true),
+                    FornecedorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,10 +77,60 @@ namespace ControleDeEstoque.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rua = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bairro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UF = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PesquisaClientesId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clientes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pesquisas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SearchString = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PesquisaSelecionada = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClientesId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pesquisas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pesquisas_Clientes_ClientesId",
+                        column: x => x.ClientesId,
+                        principalTable: "Clientes",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Categorias_ProdutosId",
                 table: "Categorias",
                 column: "ProdutosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clientes_PesquisaClientesId",
+                table: "Clientes",
+                column: "PesquisaClientesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pesquisas_ClientesId",
+                table: "Pesquisas",
+                column: "ClientesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Produtos_CategoriaProdutoViewModelId",
@@ -117,8 +147,14 @@ namespace ControleDeEstoque.Migrations
                 table: "Categorias",
                 column: "ProdutosId",
                 principalTable: "Produtos",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Clientes_Pesquisas_PesquisaClientesId",
+                table: "Clientes",
+                column: "PesquisaClientesId",
+                principalTable: "Pesquisas",
+                principalColumn: "Id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -127,8 +163,9 @@ namespace ControleDeEstoque.Migrations
                 name: "FK_Categorias_Produtos_ProdutosId",
                 table: "Categorias");
 
-            migrationBuilder.DropTable(
-                name: "Clientes");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Clientes_Pesquisas_PesquisaClientesId",
+                table: "Clientes");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
@@ -141,6 +178,12 @@ namespace ControleDeEstoque.Migrations
 
             migrationBuilder.DropTable(
                 name: "Fornecedores");
+
+            migrationBuilder.DropTable(
+                name: "Pesquisas");
+
+            migrationBuilder.DropTable(
+                name: "Clientes");
         }
     }
 }

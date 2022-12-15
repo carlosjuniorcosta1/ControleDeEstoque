@@ -10,22 +10,16 @@ namespace ControleDeEstoque.Models
         public int Id { get; set; }
 
         [Display(Name = "Nome do produto")]
-        public List<string>? NomeDoProduto { get; set; }
+
+        public string? NomeDoProduto { get; set; }
         public string? Categoria { get; set; }
 
         [Display(Name = "Preço do produto")]
         public decimal? Preco { get; set; }
 
-       public EnumFornecedor EnumFornecedores { get; set; }
     }
 
-    public enum EnumFornecedor
-    {
-        Apple, 
-        Xiaomi, 
-        Samsung,
-        Sony
-    }
+
 
 
 }

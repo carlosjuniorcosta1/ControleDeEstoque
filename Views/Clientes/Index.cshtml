@@ -1,47 +1,62 @@
-﻿@model IEnumerable<ControleDeEstoque.Models.Cliente>
+﻿@model ControleDeEstoque.Models.PesquisaClientes
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<form asp-controller="Clientes" asp-action="Index" method="get">
-    <p>
-        Pesquisa <input type="text" name="searchString" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-controller ="Clientes" asp-action="Index" method="get">
+
+    <p>
+        <select asp-for="PesquisaSelecionada" asp-items="Model.SelectNomeClientes">
+        <option value="0">Nome</option>
+        <option value="1">Cidade</option>
+        </select>
+
+        <input typeof="text" asp-for="PesquisaSelecionada"></input>
+        <input type="submit" value="Filter" />
+    </p>
+
+
+</form>
+
+
+
+
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model.Clientes.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.Clientes.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CEP)
+                @Html.DisplayNameFor(model => model.Clientes.CEP)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Rua)
+                @Html.DisplayNameFor(model => model.Clientes.Rua)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Bairro)
+                @Html.DisplayNameFor(model => model.Clientes.Bairro)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UF)
+                @Html.DisplayNameFor(model => model.Clientes.UF)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cidade)
+                @Html.DisplayNameFor(model => model.Clientes.Cidade)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.SelectClasseClientes) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Nome)

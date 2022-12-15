@@ -12,9 +12,11 @@
 
 <form asp-controller="Produtos" asp-action="Index" method="get">
     <p>
-        <select asp-for="ListaDeCategorias" asp-items="Model.ListaDeCategorias">
+        <select asp-for="CategoriaClasseCategoria" asp-items="Model.ListaDeCategorias">
             <option value="">Categorias</option>
         </select>
+         Pesquisa <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
     </p>
 
 </form>
@@ -33,14 +35,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Produtos.Preco)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Produtos.EnumFornecedores)
-            </th>
+       
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Produtos)
+        @foreach (var item in Model.ListaDeProdutos)
         {
             <tr>
                 <td>
@@ -52,9 +52,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Preco)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EnumFornecedores)
-                </td>
+             
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

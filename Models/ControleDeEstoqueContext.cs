@@ -31,6 +31,7 @@ namespace ControleDeEstoque.Models
 
         public DbSet<CategoriaProdutoViewModel> Categorias { get; set; }
 
+        public DbSet<PesquisaClientes> Pesquisas { get; set; }
 
     }
 

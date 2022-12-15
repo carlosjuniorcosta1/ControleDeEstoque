@@ -20,7 +20,7 @@ namespace ControleDeEstoque.Controllers
 
         // GET: Produtos
       
-            public async Task<IActionResult> Index(string searchString, string listaCategoria)
+            public async Task<IActionResult> Index(string searchString, string CategoriaClasseCategoria)
 
             {
                 if (_context.Produtos == null)
@@ -43,11 +43,11 @@ namespace ControleDeEstoque.Controllers
                            where x.NomeDoProduto.Contains(searchString)
                            select x;
                 }
-                if (!String.IsNullOrEmpty(listaCategoria))
+                if (!String.IsNullOrEmpty(CategoriaClasseCategoria))
 
                 {
                     prod = from x in _context.Produtos
-                           where x.Categoria == listaCategoria
+                           where x.Categoria == CategoriaClasseCategoria
                            select x;
                 }
 
@@ -59,6 +59,12 @@ namespace ControleDeEstoque.Controllers
                 };
                 return View(catprodMD);
             }
+
+    [HttpPost]
+    public string Index(string searchString, bool notUsed)
+    {
+     return "From [HttpPost]Index: filter on " + searchString;
+    }
 
         
 
@@ -91,7 +97,7 @@ namespace ControleDeEstoque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NomeDoProduto,Categoria,Preco,EnumFornecedores")] Produto produto)
+        public async Task<IActionResult> Create([Bind("Id,NomeDoProduto,Categoria,Preco")] Produto produto)
         {
             if (ModelState.IsValid)
             {
@@ -123,7 +129,7 @@ namespace ControleDeEstoque.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeDoProduto,Categoria,Preco,EnumFornecedores")] Produto produto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,NomeDoProduto,Categoria,Preco")] Produto produto)
         {
             if (id != produto.Id)
             {

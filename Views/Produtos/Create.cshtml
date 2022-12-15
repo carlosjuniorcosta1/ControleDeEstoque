@@ -27,11 +27,7 @@
                 <input asp-for="Preco" class="form-control" />
                 <span asp-validation-for="Preco" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="EnumFornecedores" class="control-label"></label>
-                <select asp-for="EnumFornecedores" class="form-control" asp-items="@Html.GetEnumSelectList<EnumFornecedor>()"></select>
-                <span asp-validation-for="EnumFornecedores" class="text-danger"></span>
-            </div>
+       
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
